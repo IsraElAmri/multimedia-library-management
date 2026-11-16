@@ -1,0 +1,27 @@
+# Compiled Binaries & Objects
+*.exe
+*.out
+*.app
+*.o
+*.obj
+*.so
+*.dylib
+*.dll
+*.csm
+*.bak
+
+# Runtime Binary Databases & Lockouts
+*.dat
+*.cfg
+
+# Build directories
+build/
+bin/
+cmake-build-*/
+.vs/
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
