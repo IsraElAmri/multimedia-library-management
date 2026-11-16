@@ -146,8 +146,12 @@ void pressAnyKey() {
     getch();
 }
 
-void clearScreen() {
-    clrscr();
+void clearScreen(void) {
+#ifdef _WIN32
+    system("cls");
+#else
+    printf("\033[H\033[J");
+#endif
 }
 
 void printMainTitle() {
