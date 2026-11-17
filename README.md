@@ -1,10 +1,11 @@
 # Multimedia Library Management System
 
+[![CI](https://github.com/IsraElAmri/multimedia-library-management/actions/workflows/ci.yml/badge.svg)](https://github.com/IsraElAmri/multimedia-library-management/actions/workflows/ci.yml)
 [![C Standard](https://img.shields.io/badge/C-C99-00599C?logo=c&logoColor=white)](https://en.wikipedia.org/wiki/C99)
 [![Build System](https://img.shields.io/badge/Build-CMake%20%7C%20Make-064F8C?logo=cmake&logoColor=white)](https://cmake.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-A terminal-based multimedia catalog and borrowing management system implemented in C99 using dynamic singly linked lists and binary file persistence.
+A terminal-based multimedia catalog and borrowing management system implemented in C99 using dynamic singly linked lists and binary file persistence. Tested on Windows and Linux (CI).
 
 ## Overview
 
@@ -13,16 +14,18 @@ Developed as an academic systems project at ENSIT to demonstrate manual memory m
 ## Features and Verified Specifications
 
 - **Media Catalog**: Supports 9 formats split across reading (books, magazines, newspapers), visual (movies, TV shows, documentaries), and audio (music, podcasts, audiobooks).
-- **In-Memory Data Structures**: Dynamic linked lists allocated on the heap (`malloc`/`free`) for catalog items and active loans.
-- **Persistence Layer**: Custom binary file storage for media items (`library.dat`), registered borrowers (`clients.dat`), credentials (`admin_credentials.dat`), and lockout state (`security.dat`).
-- **Access Control & Lockout**: Distinct administrator and member interfaces. Progressive lockout triggers after 3 consecutive failed login attempts (temporary reset timer: 60 minutes default or 24 hours strict mode) and permanent lock after 9 failed attempts.
-- **Borrowing Rules**: Enforces a limit of 5 concurrent loans per member with a standard 14-day loan window and late-return flagging.
+- **Dynamic Data Structures**: Fully manual memory management using singly linked lists for in-memory catalog navigation and dynamic client borrowing arrays.
+- **Data Persistence**: Direct binary serialization (`.bin` files) for catalog state, active loans, and client records across restarts.
+- **Security & Access Control**: Basic dual-role authentication (Admin and Client) with hashed passwords, session lockout after 3 consecutive failed attempts, and permanent lockout after 9 failures.
 
 ## Approach
 
-The system uses an in-memory linked list during interactive execution to keep traversal and lookup simple without a database engine. On startup, binary state is read from `.dat` files into heap structures, and updates are serialized back to disk. Password masking is handled at the console level, with input validation routines guarding against buffer overflow and invalid formats.
+- **Portability**: Pure C99 with cross-platform terminal abstractions (`system("cls")` on Windows, ANSI escape sequences on POSIX; `<conio.h>` on Windows, `<termios.h>` / `<unistd.h>` on POSIX).
+- **Zero Dependencies**: Self-contained single-translation-unit architecture requiring only a standard C library and compiler.
 
 ## Quick Start
+
+Tested on Windows and Linux (CI).
 
 ### Build with GCC / Clang
 ```bash
@@ -47,11 +50,13 @@ library_system.exe
 ## Project Structure
 
 ```
-.
-├── .gitignore
+multimedia-library-management/
+├── .github/
+│   └── workflows/
+│       └── ci.yml
 ├── CMakeLists.txt
-├── LICENSE
 ├── Makefile
+├── LICENSE
 ├── README.md
 └── src/
     └── main.c
@@ -59,15 +64,13 @@ library_system.exe
 
 ## Limitations and Future Improvements
 
-- **Security**: Passwords and user records are stored in unencrypted binary files without cryptographic hashing (e.g., Argon2 or bcrypt). Default demo credentials are `admin/password123`.
-- **Concurrency**: File I/O is single-process and synchronous; concurrent access by multiple users is not supported.
-- **Architecture**: The entire implementation resides in a single 2,198-line source file (`src/main.c`), which can be modularized into discrete translation units (`catalog.c`, `auth.c`, `storage.c`).
+- **Binary Serialization**: Data is stored using raw `fread`/`fwrite` on in-memory struct layouts; binary data files are not guaranteed to be portable across different machine architectures or compiler struct paddings.
+- **Credential Storage**: Default demo administrator credentials (`admin` / `password123`) are hardcoded for evaluation.
+- **Single-File Implementation**: The core logic resides in a single source file (`src/main.c`), typical for early course assignments but intended for modular refactoring.
 
 ## Author
 
-**Isra El Amri**  
-Mathematical Engineering & Modeling Student, ENSIT  
-Email: [elamriisra3@gmail.com](mailto:elamriisra3@gmail.com) · Location: Sousse, Tunisia
+- **Isra El Amri** - [GitHub Profile](https://github.com/IsraElAmri)
 
 ## License
 
