@@ -1,0 +1,29 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    name: Build (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Build with GCC on Linux
+        if: runner.os == 'Linux'
+        run: |
+          gcc -std=c99 -Wall -Wextra src/main.c -o media_library
+
+      - name: Build with GCC on Windows
+        if: runner.os == 'Windows'
+        run: |
+          gcc -std=c99 -Wall -Wextra src/main.c -o media_library.exe

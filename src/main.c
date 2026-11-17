@@ -701,7 +701,7 @@ int loadClients(Client **outClients) {
         return 0;
     }
 
-    if (fread(*outClients, sizeof(Client), count, fp) != count) {
+    if (fread(*outClients, sizeof(Client), (size_t)count, fp) != (size_t)count) {
         perror("Error reading clients");
         free(*outClients);
         *outClients = NULL;
@@ -721,7 +721,7 @@ void saveClients(Client *clients, int count) {
         return;
     }
 
-    if (fwrite(clients, sizeof(Client), count, fp) != count) {
+    if (fwrite(clients, sizeof(Client), (size_t)count, fp) != (size_t)count) {
         perror("Error writing clients");
     }
 
@@ -1155,7 +1155,7 @@ int adminLogin() {
         // LIGNE À MODIFIER POUR CHANGER LA PROGRESSION DU BLOCAGE TEMPORAIRE
         int lockoutDuration = 60 * (1 << (totalFailedLogins/MAX_LOGIN_ATTEMPTS - 1)); 
         if (now < temporaryLockoutTime + lockoutDuration) { 
-            printf("Try again in %ld seconds\n", (temporaryLockoutTime + lockoutDuration) - now);
+            printf("Try again in %ld seconds\n", (long)((temporaryLockoutTime + lockoutDuration) - now));
             pressAnyKey();
             return 0;
         }
@@ -1187,7 +1187,7 @@ int adminLogin() {
         } else if (ch == '\b' && i > 0) {
             printf("\b \b");
             i--;
-        } else if (i < sizeof(password) - 1) {
+        } else if ((size_t)i < sizeof(password) - 1) {
             password[i++] = ch;
             printf("*");
         }
@@ -1780,7 +1780,7 @@ void returnMedia() {
                 time_t now = time(NULL);
 
                 if (now > dueDate) {
-                    printf(" (OVERDUE by %ld days)", (now - dueDate) / (24 * 3600));
+                    printf(" (OVERDUE by %ld days)", (long)((now - dueDate) / (24 * 3600)));
                 }
                 printf("\n");
                 borrowedCount++;
